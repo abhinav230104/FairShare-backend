@@ -6,8 +6,11 @@ const connectDB= require("./config/db")
 const User= require("./models/User");
 const app=express();
 
-const authRoutes = require("./routes/authroutes");
 const authentication= require("./middlewares/authmiddleware")
+
+const authRoutes = require("./routes/authroutes");
+const roomRoutes = require("./routes/roomRoutes");
+
 //Middlewares
 app.use(cors());
 app.use(express.json());
@@ -31,6 +34,8 @@ app.get("/protected",authentication,(req,res)=>{
     email: req.user.email,
   });
 });
+
+app.use("/api/rooms", roomRoutes);
 
 //Start Server
 const PORT=5000;
