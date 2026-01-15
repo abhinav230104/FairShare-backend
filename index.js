@@ -6,6 +6,8 @@ const connectDB= require("./config/db")
 const User= require("./models/User");
 const app=express();
 
+const authRoutes = require("./routes/authroutes");
+const authentication= require("./middlewares/authmiddleware")
 //Middlewares
 app.use(cors());
 app.use(express.json());
@@ -13,39 +15,21 @@ app.use(express.json());
 // Connect to DB
 connectDB();
 
-//Id generator
-const generateUserId= ()=>{
- const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
- let code="";
- for(let i=0;i<4;i++)
- {
-    let ind=Math.floor(Math.random()*chars.length);
-    code+=chars.charAt(ind);
- }
- return `nomad-${code}`;
-};
+
 
 // Test-Routes
 app.get("/",(req,res)=> {
     res.send("FairShare is running!!!");
 });
 
-app.get("/test-user", async (req, res) => {
-  try {
-    const user = new User({
-      userId: generateUserId(),
-      name: "Test User",
-      email: `test${Date.now()}@mail.com`,
-      password: "dummypass"
-    });
+app.use("/api/auth", authRoutes);
 
-    await user.save();
-    const savedUser = await User.findById(user._id);
-    res.json(savedUser);
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+app.get("/protected",authentication,(req,res)=>{
+  res.json({
+    userId: req.user.userId,
+    name: req.user.name,
+    email: req.user.email,
+  });
 });
 
 //Start Server
