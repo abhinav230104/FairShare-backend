@@ -9,7 +9,8 @@ const app=express();
 const authentication= require("./middlewares/authmiddleware")
 
 const authRoutes = require("./routes/authroutes");
-const roomRoutes = require("./routes/roomRoutes");
+const roomRoutes = require("./routes/roomroutes");
+const expenseRoutes= require("./routes/expenseroutes");
 
 //Middlewares
 app.use(cors());
@@ -19,24 +20,14 @@ app.use(express.json());
 connectDB();
 
 
-
 // Test-Routes
 app.get("/",(req,res)=> {
     res.send("FairShare is running!!!");
 });
 
 app.use("/api/auth", authRoutes);
-
-app.get("/protected",authentication,(req,res)=>{
-  res.json({
-    userId: req.user.userId,
-    name: req.user.name,
-    email: req.user.email,
-  });
-});
-
 app.use("/api/rooms", roomRoutes);
-
+app.use("/api/rooms/expense",expenseRoutes);
 //Start Server
 const PORT=5000;
 app.listen(PORT,()=>
