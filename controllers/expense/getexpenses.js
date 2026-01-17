@@ -2,7 +2,7 @@ const Room = require("../../models/Room/Room");
 const Expense = require("../../models/Room/Expense");
 const { isMember } = require("../../utils/roompermissions");
 
-const getRoomExpenses = async (req, res) => {
+const getExpenses = async (req, res) => {
   try {
     const { roomId } = req.params;
     const user_id = req.user._id;
@@ -27,4 +27,4 @@ const getRoomExpenses = async (req, res) => {
   }
 };
 
-module.exports = { getRoomExpenses };
+module.exports = { getExpenses };

@@ -5,7 +5,7 @@ const { isAdmin } = require("../../utils/roompermissions");
 const addExpense = async (req, res) => {
   try {
     const { roomId } = req.params;
-    const { title, amount, participants, payer_id, category } = req.body;
+    const { title, amount, participants, paidBy, category } = req.body;
     const admin_id = req.user._id;
 
     if (!title || typeof amount !== "number" || amount <= 0) {
@@ -16,7 +16,7 @@ const addExpense = async (req, res) => {
       return res.status(400).json({ message: "Participants are required" });
     }
 
-    if (!payer_id) {
+    if (!paidBy) {
       return res.status(400).json({ message: "Payer_id is required" });
     }
 
@@ -36,7 +36,7 @@ const addExpense = async (req, res) => {
     );
 
     // Validate payer is a room member
-    if (!roomMember_ids.includes(payer_id)) {
+    if (!roomMember_ids.includes(paidBy)) {
       return res.status(400).json({
         message: "Payer must be a room member",
       });
@@ -70,7 +70,7 @@ const addExpense = async (req, res) => {
       room: room._id,
       title: title.trim(),
       amount,
-      paidBy:payer_id,
+      paidBy,
       category: category?.trim() || undefined,
       shares,
     });

@@ -1,5 +1,6 @@
 const Room = require("../../models/Room/Room");
 const { isMember } = require("../../utils/roompermissions");
+const { getSettlementsForRoom } = require("../../utils/settlements");
 
 const leaveRoom = async (req, res) => {
   try {
@@ -16,7 +17,13 @@ const leaveRoom = async (req, res) => {
       return res.status(403).json({ message: "Not a room member" });
     }
 
-    // Prevent last admin from leaving
+    const settlements = await getSettlementsForRoom(room);
+    if (settlements.length > 0) {
+      return res.status(400).json({
+        message: "Settle balances before leaving room",
+      });
+    }
+
     if (member.role === "admin") {
       const adminCount = room.members.filter(
         m => m.role === "admin"
@@ -24,7 +31,7 @@ const leaveRoom = async (req, res) => {
 
       if (adminCount === 1) {
         return res.status(400).json({
-          message: "Last admin cannot leave the room"
+          message: "Last admin cannot leave the room",
         });
       }
     }
