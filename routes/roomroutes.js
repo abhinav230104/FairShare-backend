@@ -11,6 +11,9 @@ const { removeMember } = require("../controllers/room/removemember");
 const { updateRole } = require("../controllers/room/updaterole");
 const { deleteRoom } = require("../controllers/room/deleteroom");
 const { leaveRoom } = require("../controllers/room/leaveroom");
+const { roomSettlementStatus } = require("../controllers/room/roomsettlementstatus");
+
+
 router.post("/create", authentication, createRoom);
 router.post("/join", authentication, joinRoom);
 router.get("/my",authentication,getMyRooms);
@@ -20,6 +23,7 @@ router.delete("/:roomId/removeMember/:memberDbId",authentication, removeMember);
 router.patch("/:roomId/updateRole/:memberDbId", authentication, updateRole);
 router.delete("/:roomId/deleteRoom",authentication, deleteRoom);
 router.post(":roomId/leaveRoom",authentication,leaveRoom);
+router.get("/:roomId/roomSettlementStatus",authentication,roomSettlementStatus);
 
 
 module.exports = router;
