@@ -23,7 +23,7 @@ router.post("/:roomId/addMember",authentication, addMember);
 router.delete("/:roomId/removeMember/:memberDbId",authentication, removeMember);
 router.patch("/:roomId/updateRole/:memberDbId", authentication, updateRole);
 router.delete("/:roomId/deleteRoom",authentication, deleteRoom);
-router.post(":roomId/leaveRoom",authentication,leaveRoom);
+router.post("/:roomId/leaveRoom",authentication,leaveRoom);
 router.get("/:roomId/roomSettlementStatus",authentication,roomSettlementStatus);
 router.patch("/:roomId/updateRoomName",authentication,updateRoomName);
 

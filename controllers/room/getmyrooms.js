@@ -15,6 +15,7 @@ const getMyRooms = async (req, res) => {
         roomId: room.roomId,
         name: room.name,
         role: member.role,
+        members: room.members.length,
       };
     });
 

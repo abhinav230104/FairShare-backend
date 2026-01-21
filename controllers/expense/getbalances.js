@@ -1,6 +1,6 @@
 const Room = require("../../models/Room/Room");
-const Expense = require("../../models/Room/Expense");
 const { isMember } = require("../../utils/roompermissions");
+const { calculateBalances } = require("../../utils/calculatebalances");
 
 const getBalances = async (req, res) => {
   try {
@@ -16,24 +16,7 @@ const getBalances = async (req, res) => {
       return res.status(403).json({ message: "Access denied" });
     }
 
-    const expenses = await Expense.find({ room: room._id });
-
-    const balances = {};
-
-    // Initialize balances
-    room.members.forEach(member => {
-      balances[member.user.toString()] = 0;
-    });
-
-    expenses.forEach(expense => {
-      // Payer gets credit
-      balances[expense.paidBy.toString()] += expense.amount;
-
-      // Each participant owes their share
-      expense.shares.forEach(share => {
-        balances[share.user.toString()] -= share.amount;
-      });
-    });
+    const balances = await calculateBalances(room);
 
     res.json(balances);
   } catch (error) {
